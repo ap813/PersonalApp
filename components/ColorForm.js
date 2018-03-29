@@ -6,6 +6,8 @@ import {
   TextInput
 } from 'react-native'
 
+import PropTypes from 'prop-types'
+
 export default class ColorForm extends Component {
 
   constructor() {
@@ -36,7 +38,9 @@ export default class ColorForm extends Component {
   }
 }
 
-
+ColorForm.propTypes = {
+  onNewColor: PropTypes.func.isRequired
+}
 
 const styles = StyleSheet.create({
   container: {

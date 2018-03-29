@@ -2,7 +2,8 @@ import React, { Component } from 'react'
 import {
   AppRegistry,
   StyleSheet,
-  ListView
+  ListView,
+  AsyncStorage
 } from 'react-native'
 
 import ColorButton from './components/ColorButton'
@@ -30,6 +31,30 @@ export default class ColorList extends Component {
     this.newColor = this.newColor.bind(this)
   }
 
+  componentDidMount() {
+    AsyncStorage.getItem(
+      '@ColorListStore:Colors',
+      (err, data) => {
+        if(err) {
+          console.error("Error loading colors", err)
+        } else {
+          const availableColors = JSON.parse(data)
+          this.setState({
+            availableColors,
+            dataSource: this.ds.cloneWithRows(availableColors)
+          })
+        }
+      }
+    )
+  }
+
+  saveColors(colors) {
+    AsyncStorage.setItem(
+      '@ColorListStore:Colors',
+      JSON.stringify(colors)
+    )
+  }
+
   changeColor(backgroundColor) {
     this.setState({backgroundColor})
   }
@@ -43,6 +68,7 @@ export default class ColorList extends Component {
       availableColors,
       dataSource: this.ds.cloneWithRows(availableColors)
     })
+    this.saveColors(availableColors)
   }
 
   render() {
@@ -62,6 +88,8 @@ export default class ColorList extends Component {
     )
   }
 }
+
+
 
 const styles = StyleSheet.create({
   container: {
